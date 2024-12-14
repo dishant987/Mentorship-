@@ -138,7 +138,7 @@ router.delete("/deleteprofile/:id", async (req, res) => {
 router.get("/getAllProfiles", async (req, res) => {
   try {
     const userProfile = await prisma.profile.findMany();
-
+  
     if (!userProfile) {
       return res.status(404).json({ message: "Profile Data not found" });
     }

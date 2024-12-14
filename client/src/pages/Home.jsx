@@ -30,9 +30,9 @@ function App() {
           const filteredData = resData.filter((profile) => profile.userId !== userData?.id);
           setData(filteredData); // Use the filtered data
         } else {
-          setData(resData); // Show all profiles if no user is logged in
+          setData(resData); 
         }
-        console.log(filteredData);
+      
       }
     } catch (error) {
       console.error('Error fetching profiles:', error);
@@ -61,6 +61,19 @@ function App() {
   });
 
 
+  const handleConnect = async (profileId) => {
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/notification/connect`, {
+        senderId: userData?.id,
+        receiverId: profileId,
+      });
+      if (res.status === 200) {
+        console.log('Connection request sent successfully');
+      }
+    } catch (error) {
+      console.error('Error sending connection request:', error);
+    }
+  }
 
 
   return (
@@ -117,7 +130,7 @@ function App() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-center items-center">
-                  <Button className="w-full"  >
+                  <Button className="w-full" onClick={() => handleConnect(profile.id)}  >
                     Connect
                   </Button>
                   {/* {profile.connectionStatus === "none" && (

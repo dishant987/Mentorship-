@@ -28,7 +28,6 @@ model User {
   updatedAt DateTime @updatedAt
 
   profile Profile?
-
 }
 
 model Profile {
@@ -44,18 +43,33 @@ model Profile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ConnectionList ConnectionList[]
 }
 
-model Notification {
-  id        String   @id @default(cuid())
-  type      String   // Notification type
-  message   String   // Notification message
-  senderId  String   // Sender ID
-  receiverId String // Receiver ID
+model ConnectionList {
+  id        String @id @default(cuid())
+  profileId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id         String             @id @default(cuid())
+  status     NotificationStatus @default(pending)
+  senderId   String // Sender ID
+  senderName String
+  receiverId String // Receiver ID
+  receiverName String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum NotificationStatus {
+  pending
+  accepted
+  rejected
 }
