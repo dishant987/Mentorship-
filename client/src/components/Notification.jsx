@@ -43,6 +43,12 @@ export function Notifications() {
     }, [userData]);
 
     const handleAccept = (id) => {
+        try {
+            const res = axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/notification/accept/${id}`);
+            console.log(res);
+        } catch (error) {
+            console.log(error); 
+        }
         setNotifications((prev) => prev.filter((n) => n.id !== id));
         toast.success('Notification accepted.');
     };

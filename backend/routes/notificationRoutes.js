@@ -67,42 +67,26 @@ router.post("/connect", async (req, res) => {
   }
 });
 
-router.post("/accept", async (req, res) => {
-  const { senderId, receiverId } = req.body;
-  console.log(senderId, receiverId);
+router.put("/accept/:id", async (req, res) => {
+  const notificationId = req.params.id;
+
   try {
-    const senderprofile = await prisma.profile.findUnique({
-      where: { userId: senderId },
-    });
-    const receiverProfile = await prisma.profile.findUnique({
-      where: { id: receiverId },
-    });
-
-    if (!senderprofile || !receiverProfile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
-
-    const existingNotification = await prisma.notification.findFirst({
-      where: {
-        senderId: senderprofile.id,
-        receiverId: receiverId,
-      },
-    });
-
-    if (!existingNotification) {
-      return res.status(400).json({ message: "Notification not found" });
-    }
-
     const notification = await prisma.notification.update({
-      where: {
-        id: existingNotification.id,
-      },
+      where: { id: notificationId },
+      data: { status: "accepted" },
+    });
+
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    const connectionList = await prisma.connectionList.create({
       data: {
-        status: "accepted",
+        profileId: notification.receiverId,
       },
     });
 
-    res.json(notification);
+    res.status(200).json({ message: "Notification accepted" });
   } catch (error) {
     console.error("Error accepting notification:", error.message);
     res.status(500).json({ error: "Failed to accept notification" });
