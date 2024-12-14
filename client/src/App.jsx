@@ -7,6 +7,7 @@ import { Register } from './pages/auth/Register'
 import MyProfile from './pages/MyProfile'
 import PublicProfile from './pages/PublicProfile'
 import Matching from './pages/Matching'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const App = () => {
 
@@ -19,9 +20,9 @@ const App = () => {
             <Route index path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
             <Route path="/profile/:userId" element={<PublicProfile />} />
-            <Route path='/matching' element={<Matching />} />
+            <Route path='/matching' element={<ProtectedRoute><Matching /></ProtectedRoute>} />
             {/* Add other routes here */}
           </Routes>
         </main>

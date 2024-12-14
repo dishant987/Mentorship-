@@ -25,8 +25,13 @@ function App() {
       if (res.status === 200) {
         const resData = res.data;
         // Filter data to exclude the current user's profile
-        const filteredData = resData.filter((profile) => profile.userId !== userData?.id);
-        setData(filteredData); // Use the filtered data
+        if (userData) {
+          // Filter out the current user's profile if logged in
+          const filteredData = resData.filter((profile) => profile.userId !== userData?.id);
+          setData(filteredData); // Use the filtered data
+        } else {
+          setData(resData); // Show all profiles if no user is logged in
+        }
         console.log(filteredData);
       }
     } catch (error) {
@@ -35,9 +40,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (userData) { // Ensure `userData` is available before fetching
-      getData();
-    }
+    getData();
   }, [userData]);
 
   const handleRefresh = () => {
