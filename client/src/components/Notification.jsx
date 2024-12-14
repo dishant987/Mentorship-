@@ -47,15 +47,15 @@ export function Notifications() {
             const res = axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/notification/accept/${id}`);
             console.log(res);
         } catch (error) {
-            console.log(error); 
+            console.log(error);
         }
         setNotifications((prev) => prev.filter((n) => n.id !== id));
-        toast.success('Notification accepted.');
+        toast.success('Friend request accepted.');
     };
 
     const handleReject = (id) => {
         setNotifications((prev) => prev.filter((n) => n.id !== id));
-        toast.error('Notification rejected.');
+        toast.error(' Friend request rejected.');
     };
 
     return (
