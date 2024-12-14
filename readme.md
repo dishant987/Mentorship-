@@ -1,5 +1,13 @@
 # Full-Stack Application Documentation
 
+This project is built using the following technologies:
+
+- **React.js** for the frontend
+- **Node.js** for the backend
+- **Prisma ORM** for database management
+- **NeonDB (PostgreSQL)** as the database
+
+
 ## Table of Contents
 
 1. [Frontend](#frontend)
