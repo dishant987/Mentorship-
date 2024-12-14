@@ -89,13 +89,31 @@
 
 ```
 backend/
-├── routes/
-│   ├── authRoutes.js
-│   ├── userRoutes.js
-│   └── notificationRoutes.js
-├── db/
+│
+├── db/                     # Database connection
 │   └── conn.js
-└── index.js
+│
+├── lib/                    # Library utilities
+│   └── socket.js
+│
+├── middleware/             # Middleware functions
+│   └── authMiddleware.js
+│
+├── prisma/                 # Prisma schema
+│   └── schema.prisma
+│
+├── routes/                 # API routes
+│   ├── authRoutes.js       # Authentication routes
+│   ├── userRoutes.js       # User-related routes
+│   └── notificationRoutes.js
+│
+├── .env                    # Environment variables
+├── .gitignore              # Git ignore file
+├── index.js                # Main entry point
+├── package.json            # Backend dependencies
+└── package-lock.json
+
+
 ```
 
 ### Environment Variables
