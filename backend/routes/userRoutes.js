@@ -56,6 +56,34 @@ router.post("/createprofile", verifyToken, async (req, res) => {
   }
 });
 
+router.put("/updateprofile/:id", verifyToken, async (req, res) => {
+  const id = req.params.id;
+  const updatedProfile = req.body;
+  try {
+    if (updatedProfile.email) {
+      const emailExists = await prisma.profile.findUnique({
+        where: {
+          email: updatedProfile.email,
+        },
+      });
+      if (emailExists) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+    }
+
+    const user = await prisma.profile.update({
+      where: { id },
+      data: updatedProfile,
+    });
+    if (!user) {
+      return res.status(404).json({ message: "Profile not found" });
+    }
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/profile", verifyToken, async (req, res) => {
   const userId = req.user;
   try {
@@ -109,11 +137,7 @@ router.delete("/deleteprofile/:id", async (req, res) => {
 });
 router.get("/getAllProfiles", async (req, res) => {
   try {
-    const userProfile = await prisma.profile.findMany({
-      include: {
-        notifications: true,
-      },
-    });
+    const userProfile = await prisma.profile.findMany();
 
     if (!userProfile) {
       return res.status(404).json({ message: "Profile Data not found" });

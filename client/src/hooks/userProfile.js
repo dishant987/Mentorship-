@@ -69,7 +69,56 @@ export function useProfile() {
   };
 
   const updateProfile = (updatedProfile) => {
-    setProfile(updatedProfile);
+    const updatedData = {};
+
+    // Iterate over the updatedProfile and compare with the current profile
+    Object.keys(updatedProfile).forEach((key) => {
+      if (updatedProfile[key] !== profile[key]) {
+        updatedData[key] = updatedProfile[key];
+      }
+    });
+
+    console.log(updatedData); // Log the data that will be sent
+
+    if (Object.keys(updatedData).length === 0) {
+      // If no fields have changed, return early
+      toast.info("No changes to update.");
+      return;
+    }
+
+    startTransition(async () => {
+      axios
+        .put(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user/updateprofile/${
+            profile.id
+          }`,
+          updatedData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success(res.data.message);
+            getProfile();
+            return;
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            toast.error(err.response.data.message);
+            return;
+          }
+          if (err.response.status === 404) {
+            toast.error(err.response.data.message);
+            return;
+          }
+          console.log(err);
+        });
+    });
   };
 
   const deleteProfile = () => {

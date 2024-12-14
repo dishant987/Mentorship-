@@ -7,39 +7,24 @@ import { Textarea } from '@/components/ui/textarea'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { MultiSelect } from './MultiSelect'
+import { skillOptions, interestOptions } from '../../public/data'
 
-const skillOptions = [
-  { label: 'JavaScript', value: 'javascript' },
-  { label: 'React', value: 'react' },
-  { label: 'Node.js', value: 'nodejs' },
-  { label: 'Python', value: 'python' },
-  { label: 'Java', value: 'java' },
-]
-
-const interestOptions = [
-  { label: 'Web Development', value: 'web-development' },
-  { label: 'Mobile Development', value: 'mobile-development' },
-  { label: 'Data Science', value: 'data-science' },
-  { label: 'Machine Learning', value: 'machine-learning' },
-  { label: 'DevOps', value: 'devops' },
-]
-
-const profileSchema = z.object({
+const updateProfileSchema = z.object({
   id: z.string(),
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  bio: z.string().max(500, 'Bio must be 500 characters or less'),
-  role: z.string(),
-  skills: z.array(z.string()),
-  interests: z.array(z.string()),
+  name: z.string().min(2, 'Name must be at least 2 characters').optional(),
+  email: z.string().email('Invalid email address').optional(),
+  bio: z.string().max(500, 'Bio must be 500 characters or less').optional(),
+  role: z.string().optional(),
+  skills: z.array(z.string()).optional(),
+  interests: z.array(z.string()).optional(),
 })
 
 
 
 export function EditProfileForm({ profile, onSubmit, onCancel }) {
-  console.log(profile);
+
   const form = useForm({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(updateProfileSchema),
     defaultValues: profile,
   })
 
@@ -92,7 +77,20 @@ export function EditProfileForm({ profile, onSubmit, onCancel }) {
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="mentee">Mentee</SelectItem>
+                    <SelectItem value="mentor">Mentor</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -123,8 +121,8 @@ export function EditProfileForm({ profile, onSubmit, onCancel }) {
             <FormItem>
               <FormLabel>Interests</FormLabel>
               <FormControl>
-              <MultiSelect
-                  options={skillOptions}
+                <MultiSelect
+                  options={interestOptions}
                   selected={field.value}
                   onChange={field.onChange}
                 />
