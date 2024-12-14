@@ -1,4 +1,3 @@
-import React from 'react'
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
 import Home from './pages/Home'
 import Navbar from './pages/Navbar'
@@ -7,6 +6,7 @@ import { Login } from './pages/auth/Login'
 import { Register } from './pages/auth/Register'
 import MyProfile from './pages/MyProfile'
 import PublicProfile from './pages/PublicProfile'
+import Matching from './pages/Matching'
 
 const App = () => {
 
@@ -21,6 +21,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/profile/:userId" element={<PublicProfile />} />
+            <Route path='/matching' element={<Matching />} />
             {/* Add other routes here */}
           </Routes>
         </main>

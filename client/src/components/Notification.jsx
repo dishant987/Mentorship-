@@ -28,6 +28,7 @@ export function Notifications() {
             pointer-events-auto flex w-full max-w-md sm:max-w-sm md:max-w-lg rounded-lg 
             bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
             >
+                {console.log(t)}
                 <div className="flex-1 w-0 p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">
@@ -45,7 +46,7 @@ export function Notifications() {
                             focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             // Correctly dismiss the specific toast
                             >
-                                <span className="sr-only">Close</span>
+                                <span className="sr-only" onClick={() => toast.visible(false)}>Close</span>
                                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path
                                         strokeLinecap="round"

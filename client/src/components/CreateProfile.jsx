@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,64 +7,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { MultiSelect } from './MultiSelect'
-import { useFormStatus } from 'react-dom'
+import { skillOptions, interestOptions } from '../../public/data.js'
 
-const skillOptions = [
-  { label: 'JavaScript', value: 'javascript' },
-  { label: 'React', value: 'react' },
-  { label: 'Node.js', value: 'nodejs' },
-  { label: 'Python', value: 'python' },
-  { label: 'Java', value: 'java' },
-  { label: 'HTML', value: 'html' },
-  { label: 'CSS', value: 'css' },
-  { label: 'C++', value: 'cpp' },
-  { label: 'C#', value: 'c#' },
-  { label: 'PHP', value: 'php' },
-  { label: 'Ruby', value: 'ruby' },
-  { label: 'Swift', value: 'swift' },
-  { label: 'Go', value: 'go' },
-  { label: 'Rust', value: 'rust' },
-  { label: 'Kotlin', value: 'kotlin' },
-  { label: 'Objective-C', value: 'objective-c' },
-  { label: 'Scala', value: 'scala' },
-  { label: 'TypeScript', value: 'typescript' },
-  { label: 'SQL', value: 'sql' },
-  { label: 'NoSQL', value: 'nosql' },
-  { label: 'GraphQL', value: 'graphql' },
-  { label: 'Dart', value: 'dart' },
-  { label: 'Flutter', value: 'flutter' },
-  { label: 'React Native', value: 'react-native' },
-  { label: 'Angular', value: 'angular' },
-  { label: 'Vue.js', value: 'vuejs' },
-  { label: 'Svelte', value: 'svelte' },
-  { label: 'Next.js', value: 'nextjs' },
-  { label: 'Nuxt.js', value: 'nuxtjs' },
-  { label: 'Gatsby', value: 'gatsby' },
-  { label: 'Jest', value: 'jest' },
-  { label: 'Mocha', value: 'mocha' },
-];
-
-const interestOptions = [
-  { label: 'Web Development', value: 'web-development' },
-  { label: 'Mobile Development', value: 'mobile-development' },
-  { label: 'Data Science', value: 'data-science' },
-  { label: 'Machine Learning', value: 'machine-learning' },
-  { label: 'DevOps', value: 'devops' },
-  { label: 'UI/UX Design', value: 'ui-ux-design' },
-  { label: 'Cloud Computing', value: 'cloud-computing' },
-  { label: 'Artificial Intelligence', value: 'artificial-intelligence' },
-  { label: 'Blockchain', value: 'blockchain' },
-  { label: 'Cybersecurity', value: 'cybersecurity' },
-  { label: 'Game Development', value: 'game-development' },
-  { label: 'IoT', value: 'iot' },
-  { label: 'Open Source', value: 'open-source' },
-  { label: 'Technical Writing', value: 'technical-writing' },
-  { label: 'Digital Marketing', value: 'digital-marketing' },
-  { label: 'Automation', value: 'automation' },
-  { label: 'unit testing', value: 'unit-testing' },
-  { label: 'Graphic Design', value: 'graphic-design' },
-
-];
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -78,7 +21,7 @@ const profileSchema = z.object({
 
 
 
-export function CreateProfileForm({ onSubmit,pending }) {
+export function CreateProfileForm({ onSubmit, pending }) {
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {

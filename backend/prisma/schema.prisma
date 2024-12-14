@@ -28,9 +28,6 @@ model User {
   updatedAt DateTime @updatedAt
 
   profile Profile?
-
-  SentNotifications     Notification[] @relation("sender")
-  ReceivedNotifications Notification[] @relation("receiver")
 }
 
 model Profile {
@@ -49,20 +46,4 @@ model Profile {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Notification {
-  id         String             @id @default(cuid())
-  senderId   String
-  receiverId String
-  status     NotificationStatus @default(PENDING)
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
 
-  sender   User @relation(name: "sender", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver User @relation(name: "receiver", fields: [receiverId], references: [id], onDelete: Cascade)
-}
-
-enum NotificationStatus {
-  PENDING
-  ACCEPTED
-  DECLINED
-}

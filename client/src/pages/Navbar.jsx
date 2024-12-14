@@ -1,15 +1,16 @@
 import { Menu, X, LogOut } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useUser } from '@/context/UserContext';
+
 import { UserNav } from '@/components/UserNav';
 import { Notifications } from '@/components/Notification';
+import { UserContext } from '@/context/UserContext';
+
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { isLoggedIn, userData, logout } = useUser();
-    console.log(userData);
+    const { isLoggedIn,  logout } = useContext(UserContext);
 
 
     return (
@@ -17,7 +18,7 @@ export default function Navbar() {
             <div className="container mx-auto px-4">
                 <div className="flex h-16 items-center justify-between">
                     <Link to="/" className="text-2xl font-bold">
-                        MyApp
+                        MentorShip
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -25,12 +26,12 @@ export default function Navbar() {
                         <Link to="/" className="text-sm font-medium hover:text-primary">
                             Home
                         </Link>
-                        <Link to="/about" className="text-sm font-medium hover:text-primary">
-                            About
-                        </Link>
-                        <Link to="/contact" className="text-sm font-medium hover:text-primary">
-                            Contact
-                        </Link>
+                        {
+                            isLoggedIn && <Link to="/matching" className="text-sm font-medium hover:text-primary">
+                                Matching
+                            </Link>
+                        }
+
                         <Notifications />
                         {isLoggedIn ? (
                             <UserNav />
@@ -66,20 +67,13 @@ export default function Navbar() {
                             >
                                 Home
                             </Link>
-                            <Link
-                                to="/about"
-                                className="text-sm font-medium hover:text-primary"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                About
-                            </Link>
-                            <Link
-                                to="/contact"
-                                className="text-sm font-medium hover:text-primary"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Contact
-                            </Link>
+
+                            {
+                                isLoggedIn && <Link to="/matching" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium hover:text-primary">
+                                    Matching
+                                </Link>
+                            }
+
                             {isLoggedIn ? (
                                 <Button onClick={logout} variant="ghost" asChild>
                                     <Link to="/" className="flex items-center gap-2">

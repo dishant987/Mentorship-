@@ -1,4 +1,4 @@
-import { useEffect, useState, useTransition } from 'react';
+import { useContext, useEffect, useState, useTransition } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader, Lock, Mail, } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,15 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import axios from 'axios';
-import { useUser } from '@/context/UserContext';
+
 import toast from 'react-hot-toast';
+import { UserContext } from '@/context/UserContext';
+
 
 export function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [isPending, startTransition] = useTransition();
-    console.log(isPending);
     const navigate = useNavigate();
-    const { login } = useUser();
+    const { login } = useContext(UserContext);
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -99,12 +100,7 @@ export function Login() {
                                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                 </button>
                             </div>
-                            <Link
-                                to="/forgot-password"
-                                className="text-sm text-right block hover:text-primary"
-                            >
-                                Forgot password?
-                            </Link>
+
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-4">

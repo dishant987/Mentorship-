@@ -1,52 +1,47 @@
-import prisma from "../db/conn";
+import { Server, Socket } from "socket.io";
+import prisma from "../db/conn.js";
 import express from "express";
-import verifyToken from "../middleware/authMiddleware.js";
-
 const router = express.Router();
 
-router.get("/notifications", verifyToken, async (req, res) => {
+router.get("/:userId", async (req, res) => {
+  const { userId } = req.params;
   try {
     const notifications = await prisma.notification.findMany({
-      where: {
-        userId: req.user,
+      where: { receiverId: userId },
+      include: {
+        Profile: true, // Include profile data if needed
       },
     });
-    res.status(200).json(notifications);
+    res.json(notifications);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching notifications:", error.message);
+    res.status(500).json({ error: "Failed to fetch notifications" });
   }
 });
 
-router.post("/send-notification", verifyToken, async (req, res) => {
-  const { title, message } = req.body;
+router.post("/connect", async (req, res) => {
+  const { senderId, receiverId } = req.body;
   try {
+    const profile = await prisma.profile.findUnique({
+      where: {
+        userId: senderId, // Use `userId` as the query key
+      },
+    });
+    if (!profile) {
+      return res.status(404).json({ message: "Profile not found" });
+    }
     const notification = await prisma.notification.create({
       data: {
-        title,
-        message,
-        userId: req.user,
+        senderId: profile.id,
+        receiverId,
+        profileId: profile.id,
       },
     });
-    res.status(201).json({ message: "Notification sent successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
-router.delete("/notifications/:id", verifyToken, async (req, res) => {
-  const id = req.params.id;
-  try {
-    const notification = await prisma.notification.delete({
-      where: {
-        id,
-      },
-    });
-    if (!notification) {
-      return res.status(404).json({ message: "Notification not found" });
-    }
-    res.status(200).json({ message: "Notification deleted successfully" });
+    res.json(notification);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error creating notification:", error.message);
+    res.status(500).json({ error: "Failed to create notification" });
   }
 });
 

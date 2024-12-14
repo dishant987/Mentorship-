@@ -1,4 +1,3 @@
-import { useUser } from "@/context/UserContext";
 import axios from "axios";
 import { useEffect, useState, useTransition } from "react";
 import toast from "react-hot-toast";

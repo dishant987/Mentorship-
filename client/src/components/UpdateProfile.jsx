@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { MultiSelect } from './MultiSelect'
 
 const skillOptions = [
   { label: 'JavaScript', value: 'javascript' },
@@ -36,7 +37,7 @@ const profileSchema = z.object({
 
 
 export function EditProfileForm({ profile, onSubmit, onCancel }) {
-    console.log(profile);
+  console.log(profile);
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: profile,
@@ -44,7 +45,7 @@ export function EditProfileForm({ profile, onSubmit, onCancel }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4  lg:min-w-[100px] min-w-[300px] ">
         <FormField
           control={form.control}
           name="name"
@@ -104,18 +105,12 @@ export function EditProfileForm({ profile, onSubmit, onCancel }) {
             <FormItem>
               <FormLabel>Skills</FormLabel>
               <FormControl>
-                <Select {...field}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select skills" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {skillOptions.map((skill) => (
-                      <SelectItem key={skill.value} value={skill.value}>
-                        {skill.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <MultiSelect
+                  options={skillOptions}
+                  selected={field.value}
+                  onChange={field.onChange}
+                />
+
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,24 +123,17 @@ export function EditProfileForm({ profile, onSubmit, onCancel }) {
             <FormItem>
               <FormLabel>Interests</FormLabel>
               <FormControl>
-                <Select {...field} multiple>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select interests" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {interestOptions.map((interest) => (
-                      <SelectItem key={interest.value} value={interest.value}>
-                        {interest.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <MultiSelect
+                  options={skillOptions}
+                  selected={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-between space-x-4">
           <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
           <Button type="submit">Save Changes</Button>
         </div>

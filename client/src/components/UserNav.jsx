@@ -16,10 +16,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUser } from '@/context/UserContext';
+
+import { useContext } from 'react';
+import { UserContext } from '@/context/UserContext';
 
 export function UserNav() {
-  const { userData, logout } = useUser();
+  const { userData, logout } = useContext(UserContext);
 
   return (
     <DropdownMenu>

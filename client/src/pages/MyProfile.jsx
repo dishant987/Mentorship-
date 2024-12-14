@@ -6,6 +6,8 @@ import { ProfileDisplay } from '@/components/ProfileDisplay'
 import { EditProfileForm } from '@/components/UpdateProfile'
 import { CreateProfileForm } from '@/components/CreateProfile'
 import { useProfile } from '@/hooks/userProfile'
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 
 export default function ProfilePage() {
@@ -16,7 +18,7 @@ export default function ProfilePage() {
     return (
         <div className="container mx-auto px-4 py-8 flex  flex-col justify-center items-center">
             <h1 className="text-3xl font-bold mb-8">Profile</h1>
-            {!profile  ? (
+            {!profile ? (
                 <div className="space-y-4">
                     <p className="text-lg">You haven&apos;t created a profile yet. Create one to get started!</p>
                     <Sheet>
@@ -30,11 +32,12 @@ export default function ProfilePage() {
                             <CreateProfileForm pending={isPending} onSubmit={createProfile} />
                         </SheetContent>
                     </Sheet>
+
                 </div>
             ) : (
                 <div className="space-y-6">
                     {!isEditing && !isDeleting && (
-                        <div className='space-y-6 min-w-[400px]'>
+                        <div className='space-y-6 lg:min-w-[500px] min-w-[300px]'>
                             <ProfileDisplay profile={profile} />
                             <div className="flex  justify-between">
                                 <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
@@ -43,21 +46,59 @@ export default function ProfilePage() {
                         </div>
                     )}
                     {isEditing && (
-                        <Sheet>
-                            <SheetTrigger asChild>
+                        // <Sheet>
+                        //     <SheetTrigger asChild>
+                        //         <Button>Edit Profile</Button>
+                        //     </SheetTrigger>
+                        //     <SheetContent>
+                        //         <EditProfileForm
+                        //             profile={profile}
+                        //             onSubmit={(updatedProfile) => {
+                        //                 updateProfile(updatedProfile)
+                        //                 setIsEditing(false)
+                        //             }}
+                        //             onCancel={() => setIsEditing(false)}
+                        //         />
+                        //     </SheetContent>
+                        // </Sheet>
+                        // <Drawer>
+                        //     <DrawerTrigger asChild>
+                        //         <Button>Edit Profile</Button>
+                        //     </DrawerTrigger>
+                        //     <DrawerContent>
+                        //         <div className='flex justify-center items-center'>
+                        //         <EditProfileForm
+                        //             profile={profile}
+                        //             onSubmit={(updatedProfile) => {
+                        //                 updateProfile(updatedProfile)
+                        //                 setIsEditing(false)
+                        //             }}
+                        //             onCancel={() => setIsEditing(false)}
+                        //         />
+                        //         </div>
+                        //     </DrawerContent>
+                        // </Drawer>
+                        <Dialog open  onOpenChange={isEditing} >
+                            <DialogTrigger asChild>
                                 <Button>Edit Profile</Button>
-                            </SheetTrigger>
-                            <SheetContent>
-                                <EditProfileForm
-                                    profile={profile}
-                                    onSubmit={(updatedProfile) => {
-                                        updateProfile(updatedProfile)
-                                        setIsEditing(false)
-                                    }}
-                                    onCancel={() => setIsEditing(false)}
-                                />
-                            </SheetContent>
-                        </Sheet>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Edit Profile</DialogTitle>
+                                </DialogHeader>
+                                <DialogDescription>
+                                    <EditProfileForm
+                                        profile={profile}
+                                        onSubmit={(updatedProfile) => {
+                                            updateProfile(updatedProfile)
+                                            setIsEditing(false)
+                                        }}
+                                        onCancel={() => setIsEditing(false)}
+                                    />
+                                </DialogDescription>
+                            </DialogContent>
+                        </Dialog>
+
                     )}
                     {isDeleting && (
                         <DeleteProfileConfirmation
