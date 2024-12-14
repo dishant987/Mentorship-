@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import * as z from "zod";
 
@@ -24,7 +24,7 @@ import toast from "react-hot-toast";
 
 export function RegisterForm() {
     const [showPassword, setShowPassword] = useState(false);
-    const [isPending, startTransition] = useTransition();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const form = useForm({
         resolver: zodResolver(registerSchema),
@@ -37,28 +37,23 @@ export function RegisterForm() {
     });
 
     async function onSubmit(data) {
-
-        startTransition(async () => {
-            try {
-                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, data)
-              
-                if (res.status === 201) {
-                    toast.success(res.data.message);
-                    navigate('/login');
-                }
-            } catch (error) {
-                console.log(error);
-                if (error.response.status === 400) {
-                    toast.error(error.response.data.message);
-                    return
-                }
-                
+        setIsLoading(true);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, data)
+            if (res.status === 201) {
+                toast.success(res.data.message);
+                navigate('/login');
             }
+        } catch (error) {
+
+            if (error.response.status === 400) {
+                toast.error(error.response.data.message);
+                return
+            }
+            toast.error(error.message);
+        } finally {
+            setIsLoading(false);
         }
-
-        )
-
-
     }
 
     return (
@@ -169,8 +164,8 @@ export function RegisterForm() {
                     )}
                 />
 
-                <Button disabled={isPending} type="submit" className="w-full">
-                    Create account
+                <Button disabled={isLoading} type="submit" className="w-full">
+                    {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}    Create account
                 </Button>
 
                 <p className="text-sm text-center text-muted-foreground">

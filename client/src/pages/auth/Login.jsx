@@ -13,7 +13,7 @@ import { UserContext } from '@/context/UserContext';
 
 export function Login() {
     const [showPassword, setShowPassword] = useState(false);
-    const [isPending, startTransition] = useTransition();
+    const [isLoading, setIsLoading] = useState();
     const navigate = useNavigate();
     const { login } = useContext(UserContext);
     useEffect(() => {
@@ -23,38 +23,37 @@ export function Login() {
         }
     }, [])
     const handleSubmit = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
-
-        startTransition(async () => {
-            axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
                 email: e.target.email.value,
                 password: e.target.password.value,
-            }).then((res) => {
-                if (res.data.message === "Login successful" && res.status === 200) {
-
-                    const token = res.data.token;
-                    const user = res.data.user;
-                    login(token, user);
-                    toast.success(res.data.message);
-                    navigate('/');
-                }
-
-            }).catch((err) => {
-                if (err.response.status === 401) {
-                    toast.error(err.response.data.message);
-                    return
-                }
-                if (err.response.status === 404) {
-                    toast.error(err.response.data.message);
-                    return
-                }
-                toast.error(err.message);
             })
+            if (res.data.message === "Login successful" && res.status === 200) {
 
-        })
+                const token = res.data.token;
+                const user = res.data.user;
+                login(token, user);
+                toast.success(res.data.message);
+                navigate('/');
+            }
+        } catch (err) {
+            if (err.response.status === 401) {
+                toast.error(err.response.data.message);
+                return
+            }
+            if (err.response.status === 404) {
+                toast.error(err.response.data.message);
+                return
+            }
+            toast.error(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+      
 
     };
-
     return (
         <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
             <Card className="w-full max-w-md">
@@ -104,8 +103,8 @@ export function Login() {
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-4">
-                        <Button disabled={isPending} type="submit" className="w-full">
-                            {isPending && <Loader className="h-4 w-4 animate-spin" />} Sign in
+                        <Button disabled={isLoading} type="submit" className="w-full">
+                            {isLoading && <Loader className="h-4 w-4 animate-spin" />} Sign in
                         </Button>
                         <p className="text-sm text-center text-muted-foreground">
                             Don&apos;t have an account?{' '}

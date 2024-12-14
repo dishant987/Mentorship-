@@ -28,6 +28,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   profile Profile?
+
 }
 
 model Profile {
@@ -44,6 +45,17 @@ model Profile {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
 }
 
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // Notification type
+  message   String   // Notification message
+  senderId  String   // Sender ID
+  receiverId String // Receiver ID
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+}
